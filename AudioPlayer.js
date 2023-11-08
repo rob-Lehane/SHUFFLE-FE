@@ -11,19 +11,28 @@ export const AudioPlayer=({setSongHistory})=>{
   const [rating,setRating]=useState(1)
   const [pinging,setPinging]=useState(true)
   const [playingSong,setPlayingSong] = useState()
+  const [isPlaying, setIsPlaying] = useState(false)
 
   async function playSound(){
-    console.log('loading')
-    const {sound} = await Audio.Sound.createAsync(album[currentlyPlaying].preview)
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      playsInSilentModeIOS: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+      shouldDuckAndroid: true,
+      staysActiveInBackground: true,
+      playThroughEarpieceAndroid: true
+    })
+    const { sound } = await Audio.Sound.createAsync(album[currentlyPlaying].preview)
+    setIsPlaying(true)
     setPlayingSong(sound)
 
-    console.log('playing')
-    console.log(sound)
     await sound.playAsync()
   }
 
   async function pauseSound(){
     if (playingSong) await playingSong.pauseAsync()
+    setIsPlaying(false)
   }
 
   useEffect(() => {
@@ -47,9 +56,6 @@ export const AudioPlayer=({setSongHistory})=>{
     }
   }, [currentlyPlaying])
 
-  useEffect(()=>{
-    console.log(rating)
-  },[rating])
 
 
 
@@ -63,10 +69,10 @@ export const AudioPlayer=({setSongHistory})=>{
             Artist Name
           </Text>
           
-        </View>
+        </View> 
         <View class="player-controls">
-          <Button id="play-button" title='Play' onPress={playSound} />
-          <Button id="pause-button" title='Pause' onPress={pauseSound} />
+           {isPlaying ? <Button id="pause-button" title='Pause' onPress={pauseSound} /> : 
+          <Button id="play-button" title='Play' onPress={playSound} />}
           <Button id="skip-button" title='Skip' onPress={() => {
             setCurrently((curr) => curr + 1)
           }} />
@@ -80,7 +86,7 @@ export const AudioPlayer=({setSongHistory})=>{
             fractions={1}
             minValue={0.5}
           />
-        </View>
+        </View> 
       </View>
     </View>
   )

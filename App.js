@@ -11,7 +11,7 @@ export default function App() {
   const [songHistory,setSongHistory]=useState([])
 
   useEffect(()=>{
-    console.log(songHistory)
+    // console.log(songHistory)
   },[songHistory])
 
   return (
