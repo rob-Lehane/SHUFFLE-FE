@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Rating } from 'react-native-ratings'
 import { Audio } from 'expo-av';
 
-export const AudioPlayer=({setSongHistory})=>{
+export const AudioPlayer=({setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
   const [currentlyPlaying, setCurrently] = useState(0)
   const [rating,setRating]=useState(1)
@@ -34,15 +34,16 @@ export const AudioPlayer=({setSongHistory})=>{
   }
 
   useEffect(() => {
-    axios.get('https://corsproxy.io/?https://api.deezer.com/album/302127')
+    axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=5')
       .then((res) => {
-        setAlbum(res.data.tracks.data)
+        setAlbum(res.data.songs)
         setPinging(false)
       })
       .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
+    console.log(album[currentlyPlaying])
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
@@ -52,10 +53,14 @@ export const AudioPlayer=({setSongHistory})=>{
       nextSong()
       setSongHistory((h)=>[...h,album[currentlyPlaying]])
     }
+    if (album.length-currentlyPlaying<=2){
+      axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=1')
+      .then((res) => {
+        setAlbum(a=>[...a,...res.data.songs])
+        setPinging(false)
+      })
+    }
   }, [currentlyPlaying])
-
-
-
 
   return (
     <View style={styles.container}>
@@ -63,15 +68,15 @@ export const AudioPlayer=({setSongHistory})=>{
         <View class="song-info">
           <Image src="album-cover.jpg" alt="Album Cover" />
           <Text>
-            Song Title
-            Artist Name
+            {album[currentlyPlaying]?album[currentlyPlaying].title:'title'}
+            {album[currentlyPlaying]?album[currentlyPlaying].artist:'artist'}
           </Text>
           
         </View> 
         <View class="player-controls">
            {isPlaying ? <Button id="pause-button" title='Pause' onPress={pauseSound} /> : 
-          <Button id="play-button" title='Play' onPress={playSound} />}
-          <Button id="skip-button" title='Skip' onPress={() => {
+          <Button style={styles.playButton} title='Play' onPress={playSound} />}
+          <Button id="skip-button" title='Submit Rating' onPress={() => {
             setCurrently((curr) => curr + 1)
           }} />
           <Rating
@@ -86,6 +91,7 @@ export const AudioPlayer=({setSongHistory})=>{
           />
         </View> 
       </View>
+      <View style={styles.playSymbol}></View>
     </View>
   )
 }
@@ -97,4 +103,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  playSymbol: {
+    height:0,
+    width:0,
+    borderTopWidth:'60px',
+    borderTopColor:'white',
+    borderLeftWidth:'103px',
+    borderLeftColor:'green',
+    borderBottomWidth:'60px',
+    borderBottomColor:'white'
+  },
+  playButton:{
+    marginBottom:'30px'
+  }
 });
