@@ -23,17 +23,19 @@ export default function App() {
       <View>
         {user ? `Welcome ${user.username}` : (<><TextInput style={styles.input} onChange={(e) => setLoginInput(e.target.value)} value={loginInput} />
           <Button title={'Log in'} onPress={() => {
-            axios.get('https://shufl-be.onrender.com/api/users')
+            if (loginInput){
+              axios.get(`https://shufl-be.onrender.com/api/users?username=${loginInput}`)
               .then((res) => {
-                let testUser = res.data.users.find(user => user.username === loginInput)
-                if (res.data.users.map(user => user.username).includes(loginInput)) {
-                  setUser(testUser)
+                if (res.data.users.length){
+                  setUser(res.data.users[0])
                   setLoginInput('')
                 } else {
                   setLoginError(true)
-                  setTimeout(() => setLoginError(false), 3000)
+                  setTimeout(()=>setLoginError(false),3000)
                 }
               })
+            }
+            
           }} />
           {loginError?'That user doesnt exist...':''}
           </>)}
