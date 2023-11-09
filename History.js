@@ -3,7 +3,6 @@ import { Text, Image, View, StyleSheet } from "react-native"
 export const History = ({songHistory})=>{
 
   return songHistory.map(song=>{
-    console.log('song', song.album.cover_small)
     return (
       <View>
         <Text>{song.title}</Text>
