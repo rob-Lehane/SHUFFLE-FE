@@ -1,11 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Rating } from 'react-native-ratings'
 import { History } from './History';
 import { AudioPlayer } from './AudioPlayer';
 import { TextInput } from 'react-native-web';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgb(255, 45, 85)',
+  },
+};
+
 
 export default function App() {
   const [historyShowing, setHistoryShowing] = useState(false)
@@ -15,9 +25,17 @@ export default function App() {
   const [loginError, setLoginError] = useState(false)
 
 
+
+
+
   return (
     <>
-      <Button id='history' title={historyShowing ? 'Hide History' : 'Show History'} onPress={() => setHistoryShowing((h) => !h)} />
+      <NavigationContainer theme={MyTheme}>
+        <Pressable style={styles.history} id='history' onPress={() => setHistoryShowing((h) => !h)}>
+          {historyShowing ? 
+          <Text>'Hide History'</Text> : 
+          <Text>'Show History'</Text>}
+          </Pressable>
       <AudioPlayer setSongHistory={setSongHistory} user={user}/>
       {historyShowing ? (<History songHistory={songHistory} />) : <Text></Text>}
       <View>
@@ -40,12 +58,18 @@ export default function App() {
           {loginError?'That user doesnt exist...':''}
           </>)}
       </View>
+      </NavigationContainer>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    border: 'solid black 1px'
+    border: 'solid black 1px',
+  },
+  history: {
+    color: 'black',
+    backgroundColor: 'grey',
   }
+
 })

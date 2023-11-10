@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Rating } from 'react-native-ratings'
 import { Audio } from 'expo-av';
+import { Slider } from './Slider';
 
 export const AudioPlayer=({setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
@@ -19,7 +20,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
       staysActiveInBackground: true,
-      playThroughEarpieceAndroid: true
+      playThroughEarpieceAndroid: true,
     })
     const { sound } = await Audio.Sound.createAsync(album[currentlyPlaying].preview)
     setIsPlaying(true)
@@ -34,6 +35,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
   }
 
   useEffect(() => {
+    // axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=5')
     axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=5')
       .then((res) => {
         setAlbum(res.data.songs)
@@ -69,13 +71,22 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Image src="album-cover.jpg" alt="Album Cover" />
           <Text>
             {album[currentlyPlaying]?album[currentlyPlaying].title:'title'}
+          </Text>
+          <Text>
             {album[currentlyPlaying]?album[currentlyPlaying].artist:'artist'}
           </Text>
-          
+          {album[currentlyPlaying]? console.log(album[currentlyPlaying].albumcover) : console.log(null)}
+          <Image source={{ uri: album[currentlyPlaying] ? album[currentlyPlaying].albumcover : null}} style={styles.albumCover}/>
         </View> 
         <View class="player-controls">
-           {isPlaying ? <Button id="pause-button" title='Pause' onPress={pauseSound} /> : 
-          <Button style={styles.playButton} title='Play' onPress={playSound} />}
+           {isPlaying ?
+           <div>
+              <Slider playingSong={playingSong}></Slider>
+              <Button id="pause-button" title='Pause' onPress={pauseSound} /> 
+           </div>
+            : 
+              <Button style={styles.playButton} title='Play' onPress={playSound} />
+          }
           <Button id="skip-button" title='Submit Rating' onPress={() => {
             axios.post(`https://shufl-be.onrender.com/api/users/${user.user_id}/ratings`,{user_id:user.user_id,song_id:album[currentlyPlaying].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
@@ -117,5 +128,9 @@ const styles = StyleSheet.create({
   },
   playButton:{
     marginBottom:'30px'
+  },
+  albumCover:{
+    height: '300px',
+    width: '300px'
   }
 });
