@@ -6,7 +6,7 @@ export const History = ({songHistory})=>{
 
   return songHistory.map(song=>{
     return (
-      <View>
+      <View key={song.song_id}>
         <Text>{song.title}</Text>
         <Text>{song.artist.name}</Text>
         <Image style={styles.image} source={song.album.cover_small}/>
@@ -17,8 +17,8 @@ export const History = ({songHistory})=>{
 
 const styles=StyleSheet.create({
   image:{
-    height:'100px',
-    width:'100px'
+    height:100,
+    width:100
   },
   background:{
     backgroundColor:'red'
