@@ -1,10 +1,9 @@
-
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Rating } from 'react-native-ratings'
 import { Audio } from 'expo-av';
-import { Slider } from './Slider';
+import { SongSlider } from './SongSlider';
 
 export const AudioPlayer=({setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
@@ -66,9 +65,8 @@ export const AudioPlayer=({setSongHistory, user})=>{
 
   return (
     <View style={styles.container}>
-      <View class="music-widget">
-        <View class="song-info">
-          <Image src="album-cover.jpg" alt="Album Cover" />
+      <View style={styles.musicWidget}>
+      <View style={styles.songInfo}>
           <Text>
             {album[currentlyPlaying]?album[currentlyPlaying].title:'title'}
           </Text>
@@ -78,12 +76,12 @@ export const AudioPlayer=({setSongHistory, user})=>{
           {album[currentlyPlaying]? console.log(album[currentlyPlaying].albumcover) : console.log(null)}
           <Image source={{ uri: album[currentlyPlaying] ? album[currentlyPlaying].albumcover : null}} style={styles.albumCover}/>
         </View> 
-        <View class="player-controls">
+        <View style={styles.playerControls}>
            {isPlaying ?
-           <div>
-              <Slider playingSong={playingSong}></Slider>
+           <View>
+              <SongSlider playingSong={playingSong}></SongSlider>
               <Button id="pause-button" title='Pause' onPress={pauseSound} /> 
-           </div>
+           </View>
             : 
               <Button style={styles.playButton} title='Play' onPress={playSound} />
           }
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom:'30px'
   },
   albumCover:{
-    height: '300px',
-    width: '300px'
+    height: 300,
+    width: 300
   }
 });
