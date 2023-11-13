@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Rating } from 'react-native-ratings'
 import { History } from './History';
 import { AudioPlayer } from './AudioPlayer';
-import { TextInput } from 'react-native-web';
+import { TextInput } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
 const MyTheme = {
@@ -40,7 +40,7 @@ export default function App() {
         </Pressable>
       <AudioPlayer setSongHistory={setSongHistory} user={user}/>
       <View>
-        {user ? `Welcome ${user.username}` : (<><TextInput style={styles.input} onChange={(e) => setLoginInput(e.target.value)} value={loginInput} />
+        {user ? <Text>Welcome {user.username}</Text> : (<><TextInput returnKeyType="send" style={styles.input} onChange={(e) => setLoginInput(e.target.value)} value={loginInput} />
           <Button title={'Log in'} onPress={() => {
             if (loginInput){
               axios.get(`https://shufl-be.onrender.com/api/users?username=${loginInput}`)
@@ -66,7 +66,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   input: {
-    border: 'solid black 1px',
+    borderWidth: 1,
+    borderColor: 'black',
   },
   history: {
     color: 'white',
