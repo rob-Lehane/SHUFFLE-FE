@@ -33,11 +33,11 @@ export default function App() {
       <NavigationContainer theme={MyTheme}>
         <Pressable style={styles.history} id='history' onPress={() => setHistoryShowing((h) => !h)}>
           {historyShowing ? 
-          <Text>'Hide History'</Text> : 
-          <Text>'Show History'</Text>}
-          </Pressable>
+          <Text>Hide History</Text> : 
+          <Text>Show History</Text>}
+          {historyShowing ? (<History songHistory={songHistory} />) : <Text></Text>}
+        </Pressable>
       <AudioPlayer setSongHistory={setSongHistory} user={user}/>
-      {historyShowing ? (<History songHistory={songHistory} />) : <Text></Text>}
       <View>
         {user ? `Welcome ${user.username}` : (<><TextInput style={styles.input} onChange={(e) => setLoginInput(e.target.value)} value={loginInput} />
           <Button title={'Log in'} onPress={() => {
@@ -68,8 +68,9 @@ const styles = StyleSheet.create({
     border: 'solid black 1px',
   },
   history: {
-    color: 'black',
-    backgroundColor: 'grey',
+    color: 'white',
+    backgroundColor: '#00AFDA',
+  
   }
 
 })
