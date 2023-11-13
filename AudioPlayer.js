@@ -88,7 +88,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
               <Button style={styles.playButton} title='Play' onPress={playSound} />
           }
           <Button id="skip-button" title='Submit Rating' onPress={() => {
-            axios.post(`https://shufl-be.onrender.com/api/users/${user.user_id}/ratings`,{user_id:user.user_id,song_id:album[currentlyPlaying].song_id,ranking:rating*2})
+            axios.post(`https://shufl-be.onrender.com/api/users/ratings`,{user_id:user.user_id,song_id:album[currentlyPlaying].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
             setCurrently((curr) => curr + 1)
           }} />
