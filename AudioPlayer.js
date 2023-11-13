@@ -45,7 +45,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
   }, [])
 
   useEffect(() => {
-    console.log(album[currentlyPlaying])
+    console.log(album[currentlyPlaying], "album currently playing")
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
@@ -53,7 +53,6 @@ export const AudioPlayer=({setSongHistory, user})=>{
     }
     if (playingSong) {
       nextSong()
-      setSongHistory((h)=>[...h,album[currentlyPlaying]])
     }
     if (album.length-currentlyPlaying<=2){
       axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=1')
@@ -90,6 +89,11 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Button id="skip-button" title='Submit Rating' onPress={() => {
             axios.post(`https://shufl-be.onrender.com/api/users/ratings`,{user_id:user.user_id,song_id:album[currentlyPlaying].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
+            const newSong = { "title": album[currentlyPlaying].title,
+              "artist": album[currentlyPlaying].artist,
+              "rating": rating
+              }
+            setSongHistory((h)=>[...h, newSong ])
             setCurrently((curr) => curr + 1)
           }} />
           <Rating
