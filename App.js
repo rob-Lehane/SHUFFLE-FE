@@ -48,26 +48,26 @@ export default function App() {
   };
 
 
-  const handleLogin = () => {
-    if (loginInput) {
-      axios
-        .get(`https://shufl-be.onrender.com/api/users?username=${loginInput}`)
-        .then((res) => {
-          if (res.data.users.length) {
+  // const handleLogin = () => {
+  //   if (loginInput) {
+  //     axios
+  //       .get(`https://shufl-be.onrender.com/api/users?username=${loginInput}`)
+  //       .then((res) => {
+  //         if (res.data.users.length) {
             
-            AsyncStorage.setItem('user', JSON.stringify(res.data.users[0]));
-            setUser(res.data.users[0]);
-            setLoginInput('');
-          } else {
-            setLoginError(true);
-            setTimeout(() => setLoginError(false), 3000);
-          }
-        })
-        .catch((error) => {
-          console.error('Error logging in:', error);
-        });
-    }
-  };
+  //           AsyncStorage.setItem('user', JSON.stringify(res.data.users[0]));
+  //           setUser(res.data.users[0]);
+  //           setLoginInput('');
+  //         } else {
+  //           setLoginError(true);
+  //           setTimeout(() => setLoginError(false), 3000);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error logging in:', error);
+  //       });
+  //   }
+  // };
 
   return (
     <>
@@ -89,7 +89,7 @@ export default function App() {
               <TextInput
                 returnKeyType='send'
                 style={styles.input}
-                onChange={(e) => setLoginInput(e.target.value)}
+                onChangeText={(e) => setLoginInput(e)}
                 value={loginInput}
               />
               <Button title={'Log in'} onPress={handleLogin} />
@@ -103,6 +103,7 @@ export default function App() {
   );
 
   function handleLogin() {
+    console.log(loginInput)
     if (loginInput) {
       axios.get(`https://shuffle-be-iq14.onrender.com/api/users?username=${loginInput}`).then((res) => {
         if (res.data.users.length) {
