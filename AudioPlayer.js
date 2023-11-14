@@ -9,9 +9,9 @@ export const AudioPlayer=({setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
   const [currentlyPlaying, setCurrently] = useState(0)
   const [rating,setRating]=useState(1)
-  const [pinging,setPinging]=useState(true)
   const [playingSong,setPlayingSong] = useState()
   const [isPlaying, setIsPlaying] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function playSound(){
     await Audio.setAudioModeAsync({
@@ -37,13 +37,14 @@ export const AudioPlayer=({setSongHistory, user})=>{
     axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=5')
       .then((res) => {
         setAlbum(res.data.songs)
-        setPinging(false)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err, "get rand songs"))
   }, [])
 
   useEffect(() => {
-    console.log(album[currentlyPlaying], "album currently playing")
+    if (currentlyPlaying >= album.length){
+      setLoading(true)
+    }
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
@@ -52,12 +53,14 @@ export const AudioPlayer=({setSongHistory, user})=>{
     if (playingSong) {
       nextSong()
     }
-    if (album.length-currentlyPlaying<=2){
-      axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=1')
+    if (album.length-currentlyPlaying<=4 && user){
+      console.log(user.user_id)
+      axios.get(`https://shuffle-be-iq14.onrender.com/api/users/${user.user_id}/recs`)
       .then((res) => {
         setAlbum(a=>[...a,...res.data.songs])
-        setPinging(false)
+        setLoading(false)
       })
+      .catch((err)=> console.log(err, 'get recco'))
     }
   }, [currentlyPlaying])
 
@@ -83,16 +86,17 @@ export const AudioPlayer=({setSongHistory, user})=>{
             : 
               <Button style={styles.playButton} title='Play' onPress={playSound} />
           }
-          <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
-            axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{song_id:album[currentlyPlaying].song_id,ranking:rating*2})
+          {loading ? <><Text>Loading...</Text></>: <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
+            axios.post('https://shuffle-be-iq14.onrender.com/api/users/ratings',{song_id:album[currentlyPlaying].song_id,ranking:rating*2,user_id:user.user_id})
               .then((res)=>console.log(res.data))
+              .catch((err)=> console.log(err, "post rating"))
             const newSong = { "title": album[currentlyPlaying].title,
               "artist": album[currentlyPlaying].artist,
               "rating": rating
               }
             setSongHistory((h)=>[...h, newSong ])
             setCurrently((curr) => curr + 1)
-          }} />
+          }} />}
           <Rating
             type='star'
             ratingCount={5}
