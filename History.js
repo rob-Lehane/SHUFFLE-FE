@@ -3,13 +3,17 @@ import { Text, Image, View, StyleSheet } from "react-native"
 export const History = ({songHistory})=>{
 
   
+  if (!songHistory.length) return <Text>No History</Text>
+
+
+  console.log(songHistory, "song history")
 
   return songHistory.map(song=>{
     return (
       <View key={song.song_id}>
         <Text>{song.title}</Text>
-        <Text>{song.artist.name}</Text>
-        <Image style={styles.image} source={song.album.cover_small}/>
+        <Text>{song.artist}</Text>
+        <Text>{song.rating}</Text>
       </View>
     )
   })

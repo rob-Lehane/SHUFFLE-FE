@@ -22,10 +22,12 @@ export default function App() {
   const [loginInput, setLoginInput] = useState('');
   const [loginError, setLoginError] = useState(false);
 
+
   return (
     <>
       <NavigationContainer theme={MyTheme}>
         <Pressable style={styles.history} id='history' onPress={() => setHistoryShowing((h) => !h)}>
+
           {historyShowing ? <Text>'Hide History'</Text> : <Text>'Show History'</Text>}
         </Pressable>
         <AudioPlayer setSongHistory={setSongHistory} user={user} />
@@ -88,3 +90,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
