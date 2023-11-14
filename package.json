@@ -11,7 +11,7 @@
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
     "@react-native-assets/slider": "^7.0.5",
-    "@react-native-async-storage/async-storage": "^1.19.5",
+    "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-cookies/cookies": "^6.2.1",
     "@react-navigation/native": "^6.1.9",
     "axios": "^1.6.0",

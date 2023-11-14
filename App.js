@@ -76,11 +76,25 @@ export default function App() {
           <Pressable style={styles.historyButton} onPress={() => setHistoryShowing((h) => !h)}>
             <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
           </Pressable>
-
-          {user ? <AudioPlayer setSongHistory={setSongHistory} user={user} /> : <Text style={styles.loginText}>LOG IN PLS</Text>}
-
+        {user?(<AudioPlayer setSongHistory={setSongHistory} user={user} />):<Text>LOG IN PLS</Text>}
+        {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
+        <View style={styles.inputContainer}>
+          {user ? (
+            <Text>
+              Welcome {user.username}{' '}
+              <Button title='Logout' onPress={handleLogout} color='#841584' />
+            </Text>
+          ) : (
+            <>
+              <TextInput
+                returnKeyType='send'
+                style={styles.input}
+                onChangeText={(e) => setLoginInput(e)}
+                value={loginInput}
+              />
+              <Button title={'Log in'} onPress={handleLogin} />
+              {loginError ? 'That user doesnt exist...' : ''}
           {historyShowing && <History songHistory={songHistory} />}
-
           <View style={styles.inputContainer}>
             {user ? (
               <View style={styles.loggedInContainer}>
