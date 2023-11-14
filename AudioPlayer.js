@@ -105,6 +105,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
             axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{user_id:user.user_id, song_id:album[0].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
+              .catch((err)=>console.log('i broke'))
             const newSong = { "title": album[0].title,
               "artist": album[0].artist,
               "rating": rating

@@ -19,10 +19,11 @@ const MyTheme = {
 export default function App() {
   const [historyShowing, setHistoryShowing] = useState(false);
   const [songHistory, setSongHistory] = useState([]);
-
+  const [registerInput, setRegisterInput] = useState('')
   const [user, setUser] = useState(null);
   const [loginInput, setLoginInput] = useState('');
   const [loginError, setLoginError] = useState(false);
+  const [registerError, setRegisterError] = useState(false)
 
   useEffect(() => {
     checkUserLoggedIn();
@@ -48,7 +49,7 @@ export default function App() {
   const handleLogin = () => {
     if (loginInput) {
       axios
-        .get(`https://shufl-be.onrender.com/api/users?username=${loginInput}`)
+        .get(`https://shuffle-be-iq14.onrender.com/users?username=${loginInput}`)
         .then((res) => {
           if (res.data.users.length) {
             AsyncStorage.setItem('user', JSON.stringify(res.data.users[0]));
@@ -65,53 +66,70 @@ export default function App() {
     }
   };
 
+  const handleRegistration = () => {
+    if (registerInput) {
+      axios
+        .get(`https://shuffle-be-iq14.onrender.com/api/users?username=${registerInput}`)
+        .then((res) => {
+          setRegisterError(true)
+          setTimeout(() => setRegisterError(false), 3000)
+        })
+        .catch((err) => {
+          return axios.post(`https://shuffle-be-iq14.onrender.com/api/users`, { username: registerInput })
+            .then((res) => {
+              console.log(res.data)
+              setUser(res.data.users)
+            }).catch((err)=>console.log('woof'))
+        })
+    }
+  }
+
   const playnextSong = () => {
-    
+
   }
 
   return (
     <View style={styles.container}>
       <NavigationContainer theme={MyTheme}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+
           <Pressable style={styles.historyButton} onPress={() => setHistoryShowing((h) => !h)}>
             <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
           </Pressable>
-        {user?(<AudioPlayer setSongHistory={setSongHistory} user={user} />):<Text>LOG IN PLS</Text>}
-        {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
-        <View style={styles.inputContainer}>
-          {user ? (
-            <Text>
-              Welcome {user.username}{' '}
-              <Button title='Logout' onPress={handleLogout} color='#841584' />
-            </Text>
-          ) : (
-            <>
-              <TextInput
-                returnKeyType='send'
-                style={styles.input}
-                onChangeText={(e) => setLoginInput(e)}
-                value={loginInput}
-              />
-              <Button title={'Log in'} onPress={handleLogin} />
-              {loginError ? 'That user doesnt exist...' : ''}
-          {historyShowing && <History songHistory={songHistory} />}
+
+          {user ? (<AudioPlayer setSongHistory={setSongHistory} user={user} />) : <Text>LOG IN PLS</Text>}
+          {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
+
           <View style={styles.inputContainer}>
             {user ? (
-              <View style={styles.loggedInContainer}>
-                <Text style={styles.welcomeText}>Welcome {user.username}</Text>
+
+              <Text>
+                Welcome {user.username}{' '}
                 <Button title='Logout' onPress={handleLogout} color='#841584' />
-              </View>
+              </Text>
+
             ) : (
               <>
                 <TextInput
                   returnKeyType='send'
                   style={styles.input}
-                  onChangeText={(text) => setLoginInput(text)}
+                  onChangeText={(e) => setLoginInput(e)}
                   value={loginInput}
-                  placeholder="Enter your username"
                 />
                 <Button title={'Log in'} onPress={handleLogin} />
-                {loginError ? <Text style={styles.errorText}>That user doesn't exist...</Text> : ''}
+                {loginError ? 'That user doesnt exist...' : ''}
+                {historyShowing && <History songHistory={songHistory} />}
+                <View style={styles.inputContainer}>
+                  <Text>Don't have a username yet? Register:</Text>
+                  <TextInput
+                    returnKeyType='send'
+                    style={styles.input}
+                    onChangeText={(e) => setRegisterInput(e)}
+                    value={registerInput}
+                  />
+                  <Button title={'Register'} onPress={handleRegistration} />
+                  {registerError ? (<Text>Sorry, that name is already taken...</Text>) : (<Text></Text>)}
+                </View>
               </>
             )}
           </View>
