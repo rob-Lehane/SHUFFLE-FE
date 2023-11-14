@@ -33,6 +33,8 @@ export const AudioPlayer=({setSongHistory, user})=>{
     setIsPlaying(false)
   }
 
+
+
   useEffect(() => {
     axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=5')
       .then((res) => {
@@ -59,7 +61,22 @@ export const AudioPlayer=({setSongHistory, user})=>{
     }
   }, [next])
 
+  const playNextTrack = async () => {
+    
+    await playingSong.unloadAsync();
+    setAlbum((prevAlbum) => prevAlbum.slice(1));
+    setNext(true);
+  };
+
+  const playPreviousTrack = async () => {
+    
+    await playingSong.unloadAsync();
+    setAlbum((prevAlbum) => [prevAlbum[prevAlbum.length - 1], ...prevAlbum.slice(0, -1)]);
+    setNext(true);
+  };
+
   return (
+    
     <View style={styles.container}>
       <View style={styles.musicWidget}>
       <View style={styles.songInfo}>
@@ -69,6 +86,10 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Text>
             {album[0]?album[0].artist:'artist'}
           </Text>
+          <View style={styles.navigationButtons}>
+          <Button title="Previous Track" onPress={playPreviousTrack} />
+          <Button title="Next Track" onPress={playNextTrack} />
+        </View>
           {album[0]? console.log(album[0].albumcover) : console.log(null)}
           <Image source={{ uri: album[0] ? album[0].albumcover : null}} style={styles.albumCover}/>
         </View> 
