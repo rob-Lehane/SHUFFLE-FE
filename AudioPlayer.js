@@ -11,6 +11,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
   const [next,setNext]=useState(true)
   const [playingSong,setPlayingSong] = useState()
   const [isPlaying, setIsPlaying] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function playSound(){
     await Audio.setAudioModeAsync({
@@ -37,11 +38,10 @@ export const AudioPlayer=({setSongHistory, user})=>{
       .then((res) => {
         setAlbum(res.data.songs)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err, "get rand songs"))
   }, [])
 
   useEffect(() => {
-    console.log(album[0], "album currently playing")
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
@@ -55,6 +55,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
       .then((res) => {
         setAlbum(a=>[...a,...res.data.songs])
       })
+      .catch((err)=> console.log(err, 'get recco'))
     }
   }, [next])
 
