@@ -49,19 +49,15 @@ export default function App() {
   const handleLogin = () => {
     if (loginInput) {
       axios
-        .get(`https://shuffle-be-iq14.onrender.com/users?username=${loginInput}`)
+        .get(`https://shuffle-be-iq14.onrender.com/api/users?username=${loginInput}`)
         .then((res) => {
-          if (res.data.users.length) {
-            AsyncStorage.setItem('user', JSON.stringify(res.data.users[0]));
-            setUser(res.data.users[0]);
-            setLoginInput('');
-          } else {
-            setLoginError(true);
-            setTimeout(() => setLoginError(false), 3000);
-          }
+          AsyncStorage.setItem('user', JSON.stringify(res.data.users[0]));
+          setUser(res.data.users[0]);
+          setLoginInput('');
         })
         .catch((error) => {
-          console.error('Error logging in:', error);
+          setLoginError(true);
+          setTimeout(() => setLoginError(false), 3000);
         });
     }
   };
@@ -79,7 +75,7 @@ export default function App() {
             .then((res) => {
               console.log(res.data)
               setUser(res.data.users)
-            }).catch((err)=>console.log('woof'))
+            }).catch((err) => console.log('woof'))
         })
     }
   }
@@ -117,7 +113,7 @@ export default function App() {
                   value={loginInput}
                 />
                 <Button title={'Log in'} onPress={handleLogin} />
-                {loginError ? 'That user doesnt exist...' : ''}
+                {loginError ? <Text>That user doesnt exist... </Text>: <Text></Text>}
                 {historyShowing && <History songHistory={songHistory} />}
                 <View style={styles.inputContainer}>
                   <Text>Don't have a username yet? Register:</Text>
