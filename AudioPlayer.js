@@ -7,8 +7,8 @@ import { SongSlider } from './SongSlider';
 
 export const AudioPlayer=({setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
-  const [currentlyPlaying, setCurrently] = useState(0)
   const [rating,setRating]=useState(1)
+  const [next,setNext]=useState(true)
   const [playingSong,setPlayingSong] = useState()
   const [isPlaying, setIsPlaying] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -21,7 +21,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: true,
     })
-    const { sound } = await Audio.Sound.createAsync(album[currentlyPlaying].preview)
+    const { sound } = await Audio.Sound.createAsync(album[0].preview)
     setIsPlaying(true)
     setPlayingSong(sound)
 
@@ -42,9 +42,6 @@ export const AudioPlayer=({setSongHistory, user})=>{
   }, [])
 
   useEffect(() => {
-    if (currentlyPlaying >= album.length){
-      setLoading(true)
-    }
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
@@ -53,29 +50,27 @@ export const AudioPlayer=({setSongHistory, user})=>{
     if (playingSong) {
       nextSong()
     }
-    if (album.length-currentlyPlaying<=4 && user){
-      console.log(user.user_id)
-      axios.get(`https://shuffle-be-iq14.onrender.com/api/users/${user.user_id}/recs`)
+    if (album.length<=2){
+      axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=1')
       .then((res) => {
         setAlbum(a=>[...a,...res.data.songs])
-        setLoading(false)
       })
       .catch((err)=> console.log(err, 'get recco'))
     }
-  }, [currentlyPlaying])
+  }, [next])
 
   return (
     <View style={styles.container}>
       <View style={styles.musicWidget}>
       <View style={styles.songInfo}>
           <Text>
-            {album[currentlyPlaying]?album[currentlyPlaying].title:'title'}
+            {album[0]?album[0].title:'title'}
           </Text>
           <Text>
-            {album[currentlyPlaying]?album[currentlyPlaying].artist:'artist'}
+            {album[0]?album[0].artist:'artist'}
           </Text>
-          {album[currentlyPlaying]? console.log(album[currentlyPlaying].albumcover) : console.log(null)}
-          <Image source={{ uri: album[currentlyPlaying] ? album[currentlyPlaying].albumcover : null}} style={styles.albumCover}/>
+          {album[0]? console.log(album[0].albumcover) : console.log(null)}
+          <Image source={{ uri: album[0] ? album[0].albumcover : null}} style={styles.albumCover}/>
         </View> 
         <View style={styles.playerControls}>
            {isPlaying ?
@@ -86,17 +81,17 @@ export const AudioPlayer=({setSongHistory, user})=>{
             : 
               <Button style={styles.playButton} title='Play' onPress={playSound} />
           }
-          {loading ? <><Text>Loading...</Text></>: <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
-            axios.post('https://shuffle-be-iq14.onrender.com/api/users/ratings',{song_id:album[currentlyPlaying].song_id,ranking:rating*2,user_id:user.user_id})
+          <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
+            axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{user_id:user.user_id, song_id:album[0].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
-              .catch((err)=> console.log(err, "post rating"))
-            const newSong = { "title": album[currentlyPlaying].title,
-              "artist": album[currentlyPlaying].artist,
+            const newSong = { "title": album[0].title,
+              "artist": album[0].artist,
               "rating": rating
               }
             setSongHistory((h)=>[...h, newSong ])
-            setCurrently((curr) => curr + 1)
-          }} />}
+            setAlbum((a)=>a.slice(1))
+            setNext((curr)=>!curr)
+          }} />
           <Rating
             type='star'
             ratingCount={5}
