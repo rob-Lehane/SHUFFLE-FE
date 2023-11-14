@@ -34,8 +34,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
   }
 
   useEffect(() => {
-    // axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=5')
-    axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=5')
+    axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=5')
       .then((res) => {
         setAlbum(res.data.songs)
         setPinging(false)
@@ -54,7 +53,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
       nextSong()
     }
     if (album.length-currentlyPlaying<=2){
-      axios.get('https://shufl-be.onrender.com/api/songs?random=true&limit=1')
+      axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=1')
       .then((res) => {
         setAlbum(a=>[...a,...res.data.songs])
         setPinging(false)
@@ -78,14 +77,14 @@ export const AudioPlayer=({setSongHistory, user})=>{
         <View style={styles.playerControls}>
            {isPlaying ?
            <View>
-              <SongSlider playingSong={playingSong}></SongSlider>
-              <Button id="pause-button" title='Pause' onPress={pauseSound} /> 
+              <SongSlider style={styles.songSlider} playingSong={playingSong}></SongSlider>
+              <Button id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton}/> 
            </View>
             : 
               <Button style={styles.playButton} title='Play' onPress={playSound} />
           }
-          <Button id="skip-button" title='Submit Rating' onPress={() => {
-            axios.post(`https://shufl-be.onrender.com/api/users/ratings`,{user_id:user.user_id,song_id:album[currentlyPlaying].song_id,ranking:rating*2})
+          <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
+            axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{song_id:album[currentlyPlaying].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
             const newSong = { "title": album[currentlyPlaying].title,
               "artist": album[currentlyPlaying].artist,
@@ -106,7 +105,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
           />
         </View> 
       </View>
-      <View style={styles.playSymbol}></View>
+      {/* <View style={styles.playSymbol}></View> */}
     </View>
   )
 }
@@ -117,6 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'fixed'
   },
   playSymbol: {
     height:0,
@@ -128,11 +128,24 @@ const styles = StyleSheet.create({
     borderBottomWidth:'60px',
     borderBottomColor:'white'
   },
-  playButton:{
-    marginBottom:'30px'
-  },
   albumCover:{
     height: 300,
     width: 300
+  },
+  musicWidget: {
+    flex: 2,
+    flexDirection: 'column'
+  },
+  songInfo: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  playerControls: {
+    flex: 1,
+  },
+  playButton: {
+    margin: 0,
+    padding: 0
   }
 });
