@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable, TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Rating } from 'react-native-ratings';
 import { History } from './History';
 import { AudioPlayer } from './AudioPlayer';
-import { TextInput } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -20,6 +19,7 @@ const MyTheme = {
 export default function App() {
   const [historyShowing, setHistoryShowing] = useState(false);
   const [songHistory, setSongHistory] = useState([]);
+
   const [user, setUser] = useState(null);
   const [loginInput, setLoginInput] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -46,6 +46,7 @@ export default function App() {
     AsyncStorage.removeItem('user');
     setUser(null);
   };
+
 
   const handleLogin = () => {
     if (loginInput) {
@@ -92,21 +93,46 @@ export default function App() {
               />
               <Button title={'Log in'} onPress={handleLogin} />
               {loginError ? 'That user doesnt exist...' : ''}
+
             </>
           )}
         </View>
       </NavigationContainer>
     </>
   );
+
+  function handleLogin() {
+    if (loginInput) {
+      axios.get(`https://shuffle-be-iq14.onrender.com/api/users?username=${loginInput}`).then((res) => {
+        if (res.data.users.length) {
+          setUser(res.data.users[0]);
+          setLoginInput('');
+        } else {
+          setLoginError(true);
+          setTimeout(() => setLoginError(false), 3000);
+        }
+      });
+    }
+  }
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+  },
   input: {
+    width: '50%',
+    height: '10%',
     borderWidth: 1,
     borderColor: 'black',
+    padding: 10,
   },
   history: {
     color: 'white',
     backgroundColor: '#00AFDA',
   },
 });
+
