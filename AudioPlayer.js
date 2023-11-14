@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Rating } from 'react-native-ratings'
@@ -94,14 +94,17 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Image source={{ uri: album[0] ? album[0].albumcover : null}} style={styles.albumCover}/>
         </View> 
         <View style={styles.playerControls}>
+          <SongSlider style={styles.songSlider} playingSong={playingSong}></SongSlider>
+          <View style={styles.flexDiv}>
            {isPlaying ?
-           <View>
-              <SongSlider style={styles.songSlider} playingSong={playingSong}></SongSlider>
-              <Button id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton}/> 
-           </View>
+              
+              <Pressable id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton}>
+                <View style={styles.pauseSymbol}></View>
+              </Pressable> 
             : 
-              <Button style={styles.playButton} title='Play' onPress={playSound} />
+              <Pressable style={styles.playButton} title='Play' onPress={playSound}><View style={styles.playSymbol}></View></Pressable>
           }
+          </View>
           <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
             axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{user_id:user.user_id, song_id:album[0].song_id,ranking:rating*2})
               .then((res)=>console.log(res.data))
@@ -142,12 +145,25 @@ const styles = StyleSheet.create({
   playSymbol: {
     height:0,
     width:0,
-    borderTopWidth:'60px',
-    borderTopColor:'white',
-    borderLeftWidth:'103px',
-    borderLeftColor:'green',
-    borderBottomWidth:'60px',
-    borderBottomColor:'white'
+    borderTopWidth:18,
+    borderTopColor:'#474747',
+    borderLeftWidth:31.2,
+    borderLeftColor:'#dedede',
+    borderBottomWidth:18,
+    borderBottomColor:'#474747',
+    position:'absolute',
+    marginLeft:18,
+    marginTop:11
+  },
+  pauseSymbol:{
+    height:31.2,
+    width:28,
+    backgroundColor:'#474747',
+    marginLeft:16,
+    marginTop:14,
+    borderLeftWidth:9,
+    borderRightWidth:9,
+    borderColor:'#dedede'
   },
   albumCover:{
     height: 300,
@@ -166,7 +182,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   playButton: {
-    margin: 0,
-    padding: 0
+    backgroundColor: '#474747',
+    margin: 10,
+    padding: 0,
+    borderRadius: 30,
+    width: 60,
+    height: 60
+  },
+  flexDiv:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

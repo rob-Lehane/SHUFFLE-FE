@@ -89,14 +89,15 @@ export default function App() {
       <NavigationContainer theme={MyTheme}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-          <Pressable style={styles.historyButton} onPress={() => setHistoryShowing((h) => !h)}>
-            <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
-          </Pressable>
+          
 
           {user ? (<AudioPlayer setSongHistory={setSongHistory} user={user} />) : <Text>LOG IN PLS</Text>}
           {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
 
           <View style={styles.inputContainer}>
+            <Pressable style={styles.historyButton} onPress={() => setHistoryShowing((h) => !h)}>
+            <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
+          </Pressable>
             {user ? (
 
               <Text>
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f0f0',
+    marginTop: 30
   },
   scrollContainer: {
     flexGrow: 1,
@@ -150,6 +152,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
+    marginTop: 50,
     alignItems: 'center',
   },
   buttonText: {

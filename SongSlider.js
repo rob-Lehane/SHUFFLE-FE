@@ -19,6 +19,7 @@ export function SongSlider({ playingSong }) {
 
   useEffect(() => {
     const interval = setInterval(async () => {
+      console.log(playingSong)
       const status = await playingSong.getStatusAsync();
       setCount(status.positionMillis);
     }, 1000);
