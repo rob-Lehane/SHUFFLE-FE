@@ -30,7 +30,7 @@ export default function App() {
 
           {historyShowing ? <Text>'Hide History'</Text> : <Text>'Show History'</Text>}
         </Pressable>
-        <AudioPlayer setSongHistory={setSongHistory} user={user} />
+        {user?(<AudioPlayer setSongHistory={setSongHistory} user={user} />):<Text>LOG IN PLS</Text>}
         {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
         <View style={styles.inputContainer}>
           {user ? (
