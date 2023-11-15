@@ -5,7 +5,7 @@ import { Rating } from 'react-native-ratings'
 import { Audio } from 'expo-av';
 import { SongSlider } from './SongSlider';
 
-export const AudioPlayer=({setSongHistory, user})=>{
+export const AudioPlayer=({songHistory, setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
   const [rating,setRating]=useState(1)
   const [next,setNext]=useState(true)
@@ -65,14 +65,14 @@ export const AudioPlayer=({setSongHistory, user})=>{
     
     await playingSong.unloadAsync();
     setAlbum((prevAlbum) => prevAlbum.slice(1));
-    setNext(true);
+    setNext((curr)=>!curr);
   };
 
   const playPreviousTrack = async () => {
     
     await playingSong.unloadAsync();
-    setAlbum((prevAlbum) => [prevAlbum[prevAlbum.length - 1], ...prevAlbum.slice(0, -1)]);
-    setNext(true);
+    setAlbum((prevAlbum) => [songHistory.at(-1), ...prevAlbum.slice(0, -1)]);
+    setNext((curr)=>!curr);
   };
 
   return (
@@ -120,7 +120,7 @@ export const AudioPlayer=({setSongHistory, user})=>{
             setSongHistory((h)=>[...h, newSong ])
             setAlbum((a)=>a.slice(1))
             setNext((curr)=>!curr)
-          }} />
+          }} color='#841584'/>
           <Rating
             type='star'
             ratingCount={5}

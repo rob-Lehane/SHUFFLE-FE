@@ -94,21 +94,22 @@ export default function App() {
       <NavigationContainer theme={MyTheme}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-          
 
-          {user ? (<AudioPlayer setSongHistory={setSongHistory} user={user} />) : <Text>LOG IN PLS</Text>}
+
+          {user ? (<AudioPlayer songHistory={songHistory} setSongHistory={setSongHistory} user={user} />) : <Text>LOG IN PLS</Text>}
           {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
 
           <View style={styles.inputContainer}>
-            <Pressable style={styles.historyButton} onPress={() => setHistoryShowing((h) => !h)}>
-            <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
-          </Pressable>
+            
+
             {user ? (
-<>
-              <Text>
-                Welcome {user.username}{' '}
-              </Text>
-              <Button title='Logout' onPress={handleLogout} color='#841584' />
+              <>
+                <Text style={styles.userText}>
+                  Welcome {user.username}{' '}
+                </Text>
+                <Button title={historyShowing ? 'HIDE HISTORY' : 'SHOW HISTORY'} onPress={() => setHistoryShowing((h) => !h)} color='#841584' />
+                <View style={styles.gap}/>
+                <Button title='Logout' onPress={handleLogout} color='#841584' />
               </>
             ) : (
               <>
@@ -118,8 +119,8 @@ export default function App() {
                   onChangeText={(e) => setLoginInput(e)}
                   value={loginInput}
                 />
-                <Button title={'Log in'} onPress={handleLogin} />
-                {loginError ? <Text>That user doesnt exist... </Text>: <Text></Text>}
+                <Button title={'Log in'} onPress={handleLogin} color='#841584' />
+                {loginError ? <Text>That user doesnt exist... </Text> : <Text></Text>}
                 {historyShowing && <History songHistory={songHistory} />}
                 <View style={styles.inputContainer}>
                   <Text>Don't have a username yet? Register:</Text>
@@ -129,7 +130,7 @@ export default function App() {
                     onChangeText={(e) => setRegisterInput(e)}
                     value={registerInput}
                   />
-                  <Button title={'Register'} onPress={handleRegistration} />
+                  <Button title={'Register'} onPress={handleRegistration} color='#841584' />
                   {registerError ? (<Text>Sorry, that name is already taken...</Text>) : (<Text></Text>)}
                 </View>
               </>
@@ -146,25 +147,25 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 0,
   },
-  background:{
-    position:'absolute',
-    left:0,
-    right:0,
-    height:800
+  gap:{
+    height:10
+  },
+  userText:{
+    fontSize:15,
+    marginBottom:5,
+    fontWeight:'bold'
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 800
   },
   scrollContainer: {
-    marginTop:30,
+    marginTop: 30,
     flexGrow: 1,
     justifyContent: 'space-between',
     padding: 20,
-  },
-  historyButton: {
-    backgroundColor: '#00AFDA',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    marginTop: 50,
-    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
