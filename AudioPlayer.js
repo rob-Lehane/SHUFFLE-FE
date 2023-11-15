@@ -90,7 +90,6 @@ export const AudioPlayer=({setSongHistory, user})=>{
           <Button title="Previous Track" onPress={playPreviousTrack} />
           <Button title="Next Track" onPress={playNextTrack} />
         </View>
-          {album[0]? console.log(album[0].albumcover) : console.log(null)}
           <Image source={{ uri: album[0] ? album[0].albumcover : null}} style={styles.albumCover}/>
         </View> 
         <View style={styles.playerControls}>
@@ -107,7 +106,6 @@ export const AudioPlayer=({setSongHistory, user})=>{
           </View>
           <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
             axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{user_id:user.user_id, song_id:album[0].song_id,ranking:rating*2})
-              .then((res)=>console.log(res.data))
               .catch((err)=>console.log('i broke'))
             const newSong = { "title": album[0].title,
               "artist": album[0].artist,

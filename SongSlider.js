@@ -18,13 +18,13 @@ export function SongSlider({ playingSong }) {
   }
 
   useEffect(() => {
-    const interval = setInterval(async () => {
+    if (playingSong) {const interval = setInterval(async () => {
       console.log(playingSong)
       const status = await playingSong.getStatusAsync();
       setCount(status.positionMillis);
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval);}
   }, [playingSong]);
 
   return (
@@ -43,7 +43,7 @@ export function SongSlider({ playingSong }) {
         slideOnTap={true}
         onValueChange={(value) => {
           setCount(value);
-          playingSong.setPositionAsync(value);
+          if (playingSong) playingSong.setPositionAsync(value);
         }}
       />
       <Text>{displayTime()}</Text>

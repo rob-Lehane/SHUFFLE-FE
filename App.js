@@ -73,7 +73,6 @@ export default function App() {
         .catch((err) => {
           return axios.post(`https://shuffle-be-iq14.onrender.com/api/users`, { username: registerInput })
             .then((res) => {
-              console.log(res.data)
               setUser(res.data.users)
             }).catch((err) => console.log('woof'))
         })
