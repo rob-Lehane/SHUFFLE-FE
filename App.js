@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button, Pressable, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';

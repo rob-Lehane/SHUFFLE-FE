@@ -9,11 +9,12 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
   const [album, setAlbum] = useState([])
   const [rating,setRating]=useState(1)
   const [next,setNext]=useState(true)
-  const [playingSong,setPlayingSong] = useState()
+  const [playingSong,setPlayingSong] = useState({ _loaded: false })
   const [isPlaying, setIsPlaying] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  async function playSound(){
+  async function loadSound(){
+    setLoading(true)
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       playsInSilentModeIOS: true,
@@ -21,19 +22,25 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: true,
     })
-    const { sound } = await Audio.Sound.createAsync(album[0].preview)
-    setIsPlaying(true)
+    const { sound } = await Audio.Sound.createAsync(album[0].preview) 
     setPlayingSong(sound)
-
-    await sound.playAsync()
+    setLoading(false)
   }
 
   async function pauseSound(){
-    if (playingSong) await playingSong.pauseAsync()
+    if (playingSong._loaded) await playingSong.pauseAsync()
     setIsPlaying(false)
   }
 
+  async function playSound(){
+    setIsPlaying(true)
+    if(playingSong._loaded){
+    await playingSong.playAsync()}
+  }
 
+  useEffect(()=> {
+    if(album.length) loadSound()
+  }, [album])
 
   useEffect(() => {
     axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=5')
@@ -47,10 +54,11 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
     async function nextSong(){
       pauseSound()
     await playingSong.unloadAsync()
-    playSound()
+    loadSound()
     }
-    if (playingSong) {
+    if (playingSong._loaded) {
       nextSong()
+      playSound()
     }
     if (album.length<=2){
       axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=1')
@@ -93,24 +101,24 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
         <View style={styles.playerControls}>
           <SongSlider style={styles.songSlider} playingSong={playingSong}></SongSlider>
           <View style={styles.flexDiv}>
-          <Pressable style={styles.skipButton} onPress={playPreviousTrack}>
+          <Pressable style={styles.skipButton} onPress={playPreviousTrack} disabled={loading}>
           <View style={styles.backwardSymbol1}/>
             <View style={styles.backwardSymbol2}/>
           </Pressable>
            {isPlaying ?
               
-              <Pressable id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton}>
+              <Pressable id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton} disabled={loading}>
                 <View style={styles.pauseSymbol}></View>
               </Pressable> 
             : 
-              <Pressable style={styles.playButton} title='Play' onPress={playSound}><View style={styles.playSymbol}></View></Pressable>
+              <Pressable style={styles.playButton} title='Play' onPress={playSound}><View style={styles.playSymbol} disabled={loading}></View></Pressable>
           }
           <Pressable style={styles.skipButton} onPress={playNextTrack}>
             <View style={styles.forwardSymbol1}/>
             <View style={styles.forwardSymbol2}/>
           </Pressable>
           </View>
-          <Button id="skip-button" style={styles.playButton} title='Submit Rating' onPress={() => {
+          <Button id="skip-button" style={styles.playButton} title='Submit Rating' disabled={loading} onPress={() => {
             axios.post(`https://shuffle-be-iq14.onrender.com/api/users/ratings`,{user_id:user.user_id, song_id:album[0].song_id,ranking:rating*2})
               .catch((err)=>console.log('i broke'))
             const newSong = { "title": album[0].title,

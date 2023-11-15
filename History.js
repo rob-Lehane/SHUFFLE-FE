@@ -8,9 +8,9 @@ export const History = ({songHistory})=>{
 
   console.log(songHistory, "song history")
 
-  return songHistory.map(song=>{
+  return songHistory.map((song, index) =>{
     return (
-      <View key={song.song_id}>
+      <View key={index}>
         <Text>{song.title}</Text>
         <Text>{song.artist}</Text>
         <Text>{song.rating}</Text>

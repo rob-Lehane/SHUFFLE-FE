@@ -12,13 +12,13 @@ export function SongSlider({ playingSong }) {
 
     return (
       <>
-        00:{seconds}
+        00:{isNaN(seconds) ? '00' : seconds}
       </>
     );
   }
 
   useEffect(() => {
-    if (playingSong) {const interval = setInterval(async () => {
+    if (playingSong._loaded) {const interval = setInterval(async () => {
       const status = await playingSong.getStatusAsync();
       setCount(status.positionMillis);
     }, 1000);
