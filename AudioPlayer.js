@@ -27,19 +27,26 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
     setLoading(false)
   }
 
+  useEffect(()=>{
+    if (isPlaying) playSound()
+  },[playingSong])
+
   async function pauseSound(){
     if (playingSong._loaded) await playingSong.pauseAsync()
-    setIsPlaying(false)
   }
 
   async function playSound(){
     setIsPlaying(true)
     if(playingSong._loaded){
-    await playingSong.playAsync()}
+    await playingSong.playAsync()
+    }
   }
 
   useEffect(()=> {
-    if(album.length) loadSound()
+    if(album.length) {
+      
+      loadSound()
+    }
   }, [album])
 
   useEffect(() => {
@@ -53,12 +60,10 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
   useEffect(() => {
     async function nextSong(){
       pauseSound()
-    await playingSong.unloadAsync()
-    loadSound()
+      await playingSong.unloadAsync()
     }
     if (playingSong._loaded) {
       nextSong()
-      playSound()
     }
     if (album.length<=2){
       axios.get('https://shuffle-be-iq14.onrender.com/api/songs?random=true&limit=1')
@@ -107,7 +112,11 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
           </Pressable>
            {isPlaying ?
               
-              <Pressable id="pause-button" title='Pause' onPress={pauseSound} style={styles.playButton} disabled={loading}>
+              <Pressable id="pause-button" title='Pause' onPress={()=>{
+                pauseSound()
+                setIsPlaying(false)
+              }
+              } style={styles.playButton} disabled={loading}>
                 <View style={styles.pauseSymbol}></View>
               </Pressable> 
             : 
