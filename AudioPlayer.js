@@ -81,11 +81,8 @@ export const AudioPlayer=({songHistory, setSongHistory, user})=>{
     setNext((curr)=>!curr);
   };
 
-  const playPreviousTrack = async () => {
-    
-    await playingSong.unloadAsync();
-    setAlbum((prevAlbum) => [songHistory.at(-1), ...prevAlbum.slice(0, -1)]);
-    setNext((curr)=>!curr);
+  const playPreviousTrack = async () => {   
+    await playingSong.setPositionAsync(0)
   };
 
   return (
