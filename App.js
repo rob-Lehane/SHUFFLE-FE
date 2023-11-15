@@ -4,6 +4,7 @@ import { Rating } from 'react-native-ratings';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { History } from './History';
 import { AudioPlayer } from './AudioPlayer';
@@ -85,6 +86,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={['rgba(0,0,0,0.8)', 'transparent']}
+        style={styles.background}
+      />
       <NavigationContainer theme={MyTheme}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
 
@@ -98,12 +104,12 @@ export default function App() {
             <Text style={styles.buttonText}>{historyShowing ? 'Hide History' : 'Show History'}</Text>
           </Pressable>
             {user ? (
-
+<>
               <Text>
                 Welcome {user.username}{' '}
-                <Button title='Logout' onPress={handleLogout} color='#841584' />
               </Text>
-
+              <Button title='Logout' onPress={handleLogout} color='#841584' />
+              </>
             ) : (
               <>
                 <TextInput
@@ -138,10 +144,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    marginTop: 30
+    marginTop: 0,
+  },
+  background:{
+    position:'absolute',
+    left:0,
+    right:0,
+    height:800
   },
   scrollContainer: {
+    marginTop:30,
     flexGrow: 1,
     justifyContent: 'space-between',
     padding: 20,
