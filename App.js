@@ -96,7 +96,7 @@ export default function App() {
 
 
 
-          {user ? (<AudioPlayer songHistory={songHistory} setSongHistory={setSongHistory} user={user} />) : <Text>LOG IN PLS</Text>}
+          {user ? (<AudioPlayer songHistory={songHistory} setSongHistory={setSongHistory} user={user} />) : <Text style={styles.title}>shufl.fm</Text>}
           {historyShowing ? <History songHistory={songHistory} /> : <Text></Text>}
 
           <View style={styles.inputContainer}>
@@ -143,6 +143,12 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  title:{
+    color:'#ffffff',
+    fontWeight:'bold',
+    textAlign:'center',
+    fontSize:30
+  },
   container: {
     flex: 1,
     marginTop: 0,
