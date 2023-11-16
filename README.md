@@ -1,18 +1,6 @@
+# Shufl.fm Frontend
 
-//npm i
-
-//npm run web
-
-//node modules
-//expo-av
-//build
-//AV.js
-//line 54, remove && Platform.OS === "web"
-
-
-# Shuffle.fm Frontend
-
-This repository houses the frontend code for Shuffle.fm, a cutting-edge music recommendation app. Our frontend is built with React, providing a dynamic and responsive user interface that interacts seamlessly with our backend services.
+This repository houses the frontend code for Shfle.fm, a cutting-edge music recommendation app. Our frontend is built with React, providing a dynamic and responsive user interface that interacts seamlessly with our backend services.
 
 ## Features
 
@@ -40,3 +28,14 @@ These instructions will get you a copy of the frontend project up and running on
 1. Clone the frontend repo:
    ```bash
    git clone https://github.com/yourusername/Suffle.fm-frontend.git
+
+TO COMPLETE:
+//npm i
+
+//npm run web
+
+//node modules
+//expo-av
+//build
+//AV.js
+//line 54, remove && Platform.OS === "web"
