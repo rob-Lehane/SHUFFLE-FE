@@ -17,14 +17,14 @@ export function SongSlider({ playingSong }) {
     );
   }
 
-  useEffect(() => {
-    if (playingSong._loaded) {const interval = setInterval(async () => {
-      const status = await playingSong.getStatusAsync();
-      setCount(status.positionMillis);
-    }, 1000);
+  // useEffect(() => {
+  //   if (playingSong._loaded) {const interval = setInterval(async () => {
+  //     const status = await playingSong.getStatusAsync();
+  //     setCount(status.positionMillis);
+  //   }, 1000);
 
-    return () => clearInterval(interval);}
-  }, [playingSong]);
+  //   return () => clearInterval(interval);}
+  // }, [playingSong]);
 
   return (
     <>
