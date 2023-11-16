@@ -18,7 +18,7 @@ export const History = ({ songHistory }) => {
               <Text style={styles.songs}>{song.title}</Text>
               <Text style={styles.artists}>{song.artist}</Text>
               <Text style={styles.ratings}>{song.rating} stars</Text>
-              <Text style={styles.networkGuess}>Predicted: {song.networkGuess/2} stars</Text>
+              <Text style={styles.networkGuess}>Predicted: {song.networkGuess<1?0.5:song.networkGuess>10?5:song.networkGuess/2} stars</Text>
             </View>
             <Image source={{ uri: song.albumCover }} style={styles.albumCover} />
           </View>
