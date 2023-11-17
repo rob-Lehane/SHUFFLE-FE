@@ -22,12 +22,23 @@ These instructions will get you a copy of the frontend project up and running on
 ### Prerequisites
 
 - Node.js
+- Expo Go for iOS or Android
 
 ### Installation
 
 1. Clone the frontend repo:
    ```bash
    git clone https://github.com/yourusername/Suffle.fm-frontend.git
+
+2. Install dependencies:
+   ```bash
+   npm i
+
+3. Host the app locally:
+   ```bash
+   npm run web
+
+4. Open the app using Expo-Go's QR scanner on mobile. This is a local service, so the phone and computer must be on the same network.
 
 TO COMPLETE:
 //npm i
