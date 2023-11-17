@@ -1,6 +1,6 @@
 # Shufl.fm Frontend
 
-This repository houses the frontend code for Shfle.fm, a cutting-edge music recommendation app. Our frontend is built with React, providing a dynamic and responsive user interface that interacts seamlessly with our backend services.
+This repository houses the frontend code for Shfle.fm, a music recommendation app. Our frontend is built with React, providing responsive user interface that interacts seamlessly with our backend services.
 
 ## Features
 
