@@ -34,17 +34,15 @@ These instructions will get you a copy of the frontend project up and running on
    ```bash
    npm i
 
-3. Host the app locally:
+3. Run the following script to configure node_modules for the app
+   ```bash
+   npm run config
+
+4. Host the app locally:
    ```bash
    npm run web
 
-4. Open the app using Expo-Go's QR scanner on mobile. This is a local service, so the phone and computer must be on the same network.
-
-TO COMPLETE:
-//npm i
-
-//npm run config
-//npm run web
+5. Open the app using Expo-Go's QR scanner on mobile. This is a local service, so the phone and computer must be on the same network.
 
 ### Back end
 
